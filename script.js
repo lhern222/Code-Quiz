@@ -1,14 +1,19 @@
 //Variables
 var score = 0;
-var quizList = 0;
+var questionIndex = 0;
 
 var currentTime = document.querySelector("#currentTime");
-var timer = document.querySelector("startTimer");
-var quizQuestions = document.getElementById("#quiz-questions");
-var btnStart = document.getElementById("#btn-start");
+var timer = document.querySelector("#startTimer");
+var questionsDiv = document.querySelector("#questionsdiv");
+var btnStart = document.querySelector("#btn-start");
 var wrapper = document.querySelector("#wrapper");
+var titleItem = document.getElementById("#title-item");
 
-var storedScores = JSON.parse(localStorage.getItem("userData"));
+
+
+var nextQuestions
+var questionanswers = document.getElementById("#question-answer");
+
 
 var questions = [
     {
@@ -40,12 +45,13 @@ var questions = [
     
 ];
 
+//timer
 var secondsLeft = 75;
 var holdInterval = 0;
-var penalty = 5;
+var penalty = 10;
 var ulCreate = document.createElement("ul");
 
-timer.addEventListerner("click", function() {
+timer.addEventListener("click", function() {
   if (holdInterval === 0) {
     holdInterval = setInterval(function () {
         secondsLeft--;
@@ -58,24 +64,22 @@ timer.addEventListerner("click", function() {
         }
     }, 1000);
   }
-  render(quizList);
+  render(questionIndex);
 });
 
-function render(_quizIndex) {
-    quizQuestions.innerHTML = "";
+function render(questionIndex) {
+    questionsDiv.innerHTML = "";
     ulCreate.innerHTML = "";
-
     for (var i = 0; i < questions.length; i++) {
-        var userQuestion = questions[quizIndex].title;
-        var userChoices = questions[quizIndex].choices;
-        quizQuestions.textContent = userQuestion;
+      var userQuestion = questions[questionIndex].title;
+      var userChoices = questions[questionIndex].choices;
+      questionsDiv.textContent = userQuestion;
     }
     userChoices.forEach(function (newItem) {
-        var listItems = document.createElement("li");
-        listItems.textContent = newItem;
-        quizQuestions.appendChild(ulCreate);
-        ulCreate.appendChild(listItems);
-        listItems.addEventListener("click", (compare));
-    
-    })
-}
+      var listItem = document.createElement("li");
+      listItem.textContent = newItem;
+      questionsDiv.appendChild(ulCreate);
+      ulCreate.appendChild(listItem);
+      listItem.addEventListener("click", compare);
+    });
+  }
